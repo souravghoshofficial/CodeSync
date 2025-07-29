@@ -1,12 +1,21 @@
 import express from "express"
+import http from "http"
+import {Server} from "socket.io"
 
 const app = express();
 
+const server = http.createServer(app);
 
-app.get('/' , (req, res) => {
-    res.send("Hello");
+const io = new Server(server);
+
+const port = process.env.PORT || 5000
+
+
+io.on('connection' , (socket) => {
+    console.log('Socket connected' , socket.id);
 })
 
-app.listen(3000 , () => {
-    console.log("Server is listening on port 3000");
+
+server.listen(port , () => {
+    console.log(`App is listening on port ${port}`);
 })
