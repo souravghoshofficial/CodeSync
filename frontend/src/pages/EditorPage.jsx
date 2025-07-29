@@ -6,7 +6,7 @@ const EditorPage = () => {
   const [clients, setClients] = useState([
     { socketId: 1, username: "Sourav Ghosh" },
     { socketId: 2, username: "Abhijit Rabidas" },
-    { socketId: 3, username: "Subhra Shaw" },
+    { socketId: 3, username: "Subhra S" },
     { socketId: 4, username: "Rohit Gupta" },
   ]);
 
@@ -40,7 +40,7 @@ const EditorPage = () => {
       </div>
 
       {/* Editor */}
-      <div>
+      <div className="w-full">
         <Editor />
       </div>
     </div>
