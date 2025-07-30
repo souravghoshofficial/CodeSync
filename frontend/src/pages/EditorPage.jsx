@@ -7,6 +7,7 @@ import toast from "react-hot-toast";
 
 const EditorPage = () => {
   const socketRef = useRef(null);
+  const codeRef = useRef(null);
   const location = useLocation();
   const reactNavigator = useNavigate();
   const { roomId } = useParams();
@@ -36,6 +37,10 @@ const EditorPage = () => {
           toast.success(`${username} joined the room.`);
         }
         setClients(clients);
+        socketRef.current.emit('code-sync', {
+          code: codeRef.current,
+          socketId
+        });
       });
 
       // Listening for disconntected
@@ -106,7 +111,7 @@ const EditorPage = () => {
 
       {/* Editor */}
       <div className="w-full">
-        <Editor roomId={roomId} socketRef={socketRef} />
+        <Editor roomId={roomId} socketRef={socketRef} onCodeChange={(code) => {codeRef.current = code}} />
       </div>
     </div>
   );
