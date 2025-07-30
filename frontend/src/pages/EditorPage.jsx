@@ -1,32 +1,54 @@
-import { useState , useRef , useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 import Client from "../components/Client";
 import Editor from "../components/Editor";
 import { initSocket } from "../socket";
-import { useLocation } from "react-router"
+import { useLocation, useNavigate, Navigate, useParams } from "react-router";
+import toast from "react-hot-toast";
 
 const EditorPage = () => {
   const socketRef = useRef(null);
   const location = useLocation();
+  const reactNavigator = useNavigate();
+  const { roomId } = useParams();
+
+  const [clients, setClients] = useState([]);
+
   useEffect(() => {
-      const init = async() => {
-        socketRef.current = await initSocket();
-        
-        // socketRef.current.emit('join' , {
-        //   roomId, 
-        //   username: location.state?.username
-        // })
-      };
+    const init = async () => {
+      socketRef.current = await initSocket();
+      socketRef.current.on("connect_error", (err) => handleErrors(err));
+      socketRef.current.on("connect_failed", (err) => handleErrors(err));
 
-      init();
-  }, [])
-  
+      function handleErrors(e) {
+        console.log("Socket Error", e);
+        toast.error("Socket connection failed, try again later.");
+        reactNavigator("/");
+      }
 
-  const [clients, setClients] = useState([
-    { socketId: 1, username: "Sourav Ghosh" },
-    { socketId: 2, username: "Abhijit Rabidas" },
-    { socketId: 3, username: "Subhra S" },
-    { socketId: 4, username: "Rohit Gupta" },
-  ]);
+      socketRef.current.emit("join", {
+        roomId,
+        username: location.state?.username,
+      });
+
+      // Listenting for joined event
+      socketRef.current.on("joined", ({ clients, username, socketId }) => {
+        if (username !== location.state.username) {
+          toast.success(`${username} joined the room.`);
+        }
+        setClients(clients);
+      });
+
+      // Listening for disconntected
+      socketRef.current.on('disconnected', ({ socketId, username }) => {
+        toast.success(`${username} left the room.`);
+        setClients((prev) => {
+          return prev.filter(client => client.socketId != socketId)
+        })
+      });
+    };
+
+    init();
+  }, []);
 
   return (
     <div className="w-full h-screen bg-black text-white flex">
