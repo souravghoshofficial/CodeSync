@@ -39,15 +39,22 @@ const EditorPage = () => {
       });
 
       // Listening for disconntected
-      socketRef.current.on('disconnected', ({ socketId, username }) => {
+      socketRef.current.on("disconnected", ({ socketId, username }) => {
         toast.success(`${username} left the room.`);
         setClients((prev) => {
-          return prev.filter(client => client.socketId != socketId)
-        })
+          return prev.filter((client) => client.socketId != socketId);
+        });
       });
     };
 
     init();
+    return () => {
+      if (socketRef.current) {
+        socketRef.current.off("joined");
+        socketRef.current.off("disconnected");
+        socketRef.current.disconnect();
+      }
+    };
   }, []);
 
   return (
@@ -81,7 +88,7 @@ const EditorPage = () => {
 
       {/* Editor */}
       <div className="w-full">
-        <Editor />
+        <Editor roomId={roomId} socketRef={socketRef} />
       </div>
     </div>
   );
