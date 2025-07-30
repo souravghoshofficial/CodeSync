@@ -44,6 +44,13 @@ const Editor = ({ socketRef, roomId }) => {
         }
       });
     }
+
+    return () => {
+      if(socketRef.current){
+        socketRef.current.off('code-change');
+      }
+    }
+
   }, [socketRef.current]);
 
   return <textarea className="w-full h-full" id="realtimeEditor"></textarea>;

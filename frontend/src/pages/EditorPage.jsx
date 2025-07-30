@@ -66,6 +66,10 @@ const EditorPage = () => {
     }
   }
 
+  async function leaveRoom() {
+    reactNavigator('/')
+  }
+
 
   if(!location.state){
     return <Navigate to="/" />
@@ -94,7 +98,7 @@ const EditorPage = () => {
           <button onClick={copyRoomId} className="w-full py-2 bg-gray-100 text-black font-semibold rounded-md cursor-pointer">
             Copy Room ID
           </button>
-          <button className="mt-4 w-full py-2 bg-red-500 text-black font-semibold rounded-md cursor-pointer">
+          <button onClick={leaveRoom} className="mt-4 w-full py-2 bg-red-500 text-black font-semibold rounded-md cursor-pointer">
             Leave
           </button>
         </div>
