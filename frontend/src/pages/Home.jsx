@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState , useEffect } from 'react'
 import {v4 as uuid} from "uuid"
 import toast from "react-hot-toast"
 import { useNavigate } from "react-router"
@@ -29,6 +29,13 @@ const Home = () => {
       }
     });
   }
+
+  useEffect(() => {
+    async function init() {
+      await fetch(import.meta.env.VITE_BACKEND_URL)
+    }
+  }, [])
+  
 
 
   return (

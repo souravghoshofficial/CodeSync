@@ -22,6 +22,11 @@ function getAllConnectedClients(roomId) {
 }
 
 
+app.get("/", (req, res) => {
+    res.send("Server is listening!")
+})
+
+
 io.on('connection' , (socket) => {
     console.log('Socket connected' , socket.id);
 
