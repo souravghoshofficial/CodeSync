@@ -34,6 +34,7 @@ const Home = () => {
     async function init() {
       await fetch(import.meta.env.VITE_BACKEND_URL)
     }
+    init()
   }, [])
   
 
